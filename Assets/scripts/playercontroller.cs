@@ -1,129 +1,152 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField]
-    private float walkSpeed = 4f;
-
-    [SerializeField]
-    private float runSpeed = 7f;
-
-    [SerializeField]
-    private float rotationSpeed = 10f;
-
-    [Header("Jump")]
-    [SerializeField]
-    private float jumpHeight = 1.5f;
+    private float moveSpeed = 4f;
 
     [SerializeField]
     private float gravity = -20f;
 
+    [Header("Camera")]
+    [SerializeField]
+    private Transform cameraHolder;
+
+    [SerializeField]
+    private float mouseSensitivity = 0.08f;
+
     private CharacterController controller;
 
-    private InputAction moveAction;
-    private InputAction jumpAction;
-    private InputAction sprintAction;
+    private float verticalVelocity;
 
-    private Vector3 verticalVelocity;
+    private float cameraPitch;
 
     private void Start()
     {
         controller =
             GetComponent<CharacterController>();
 
-        moveAction =
-            InputSystem.actions.FindAction("Move");
+        Cursor.lockState =
+            CursorLockMode.Locked;
 
-        jumpAction =
-            InputSystem.actions.FindAction("Jump");
-
-        sprintAction =
-            InputSystem.actions.FindAction("Sprint");
+        Cursor.visible =
+            false;
     }
 
     private void Update()
     {
         Move();
-        JumpAndGravity();
+
+        Look();
     }
 
     private void Move()
     {
-        Vector2 input =
-            moveAction.ReadValue<Vector2>();
-
-        Vector3 direction =
-            new Vector3(
-                input.x,
-                0f,
-                input.y
-            );
-
-        if (direction.magnitude < 0.1f)
+        if (Keyboard.current == null)
         {
             return;
         }
 
-        direction.Normalize();
+        float horizontal = 0f;
+        float vertical = 0f;
 
-        float speed =
-            walkSpeed;
-
-        if (sprintAction.IsPressed())
+        if (Keyboard.current.wKey.isPressed)
         {
-            speed =
-                runSpeed;
+            vertical += 1f;
         }
 
-        controller.Move(
-            direction *
-            speed *
-            Time.deltaTime
-        );
-
-        Quaternion targetRotation =
-            Quaternion.LookRotation(
-                direction
-            );
-
-        transform.rotation =
-            Quaternion.Slerp(
-                transform.rotation,
-                targetRotation,
-                rotationSpeed *
-                Time.deltaTime
-            );
-    }
-
-    private void JumpAndGravity()
-    {
-        if (controller.isGrounded &&
-            verticalVelocity.y < 0f)
+        if (Keyboard.current.sKey.isPressed)
         {
-            verticalVelocity.y =
+            vertical -= 1f;
+        }
+
+        if (Keyboard.current.dKey.isPressed)
+        {
+            horizontal += 1f;
+        }
+
+        if (Keyboard.current.aKey.isPressed)
+        {
+            horizontal -= 1f;
+        }
+
+        Vector3 direction =
+            transform.right * horizontal +
+            transform.forward * vertical;
+
+        direction =
+            Vector3.ClampMagnitude(
+                direction,
+                1f
+            );
+
+        if (controller.isGrounded &&
+            verticalVelocity < 0f)
+        {
+            verticalVelocity =
                 -2f;
         }
 
-        if (jumpAction.WasPressedThisFrame() &&
-            controller.isGrounded)
-        {
-            verticalVelocity.y =
-                Mathf.Sqrt(
-                    jumpHeight *
-                    -2f *
-                    gravity
-                );
-        }
-
-        verticalVelocity.y +=
+        verticalVelocity +=
             gravity *
             Time.deltaTime;
 
+        Vector3 movement =
+            direction *
+            moveSpeed;
+
+        movement.y =
+            verticalVelocity;
+
         controller.Move(
-            verticalVelocity *
+            movement *
             Time.deltaTime
         );
+    }
+
+    private void Look()
+    {
+        if (Mouse.current == null)
+        {
+            return;
+        }
+
+        Vector2 mouseDelta =
+            Mouse.current.delta.ReadValue();
+
+        float mouseX =
+            mouseDelta.x *
+            mouseSensitivity;
+
+        float mouseY =
+            mouseDelta.y *
+            mouseSensitivity;
+
+        // หมุนตัวผู้เล่นซ้าย-ขวา
+        transform.Rotate(
+            Vector3.up *
+            mouseX
+        );
+
+        // หมุนกล้องขึ้น-ลง
+        cameraPitch -=
+            mouseY;
+
+        cameraPitch =
+            Mathf.Clamp(
+                cameraPitch,
+                -80f,
+                80f
+            );
+
+        cameraHolder.localRotation =
+            Quaternion.Euler(
+                cameraPitch,
+                0f,
+                0f
+            );
     }
 }
