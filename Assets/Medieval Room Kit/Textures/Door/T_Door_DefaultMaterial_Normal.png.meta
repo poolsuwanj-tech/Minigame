@@ -1,5 +1,12 @@
 fileFormatVersion: 2
 guid: df130288c7509b943bb46bedbb902641
+AssetOrigin:
+  serializedVersion: 1
+  productId: 399232
+  packageName: Medieval Room Kit
+  packageVersion: 1.0
+  assetPath: Assets/Medieval Room Kit/Textures/Door/T_Door_DefaultMaterial_Normal.png
+  uploadId: 971490
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -69,7 +76,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 4096
+    maxTextureSize: 1024
     resizeAlgorithm: 0
     textureFormat: -1
     textureCompression: 1
@@ -128,10 +135,3 @@ TextureImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 399232
-  packageName: Medieval Room Kit
-  packageVersion: 1.0
-  assetPath: Assets/Medieval Room Kit/Textures/Door/T_Door_DefaultMaterial_Normal.png
-  uploadId: 971490
