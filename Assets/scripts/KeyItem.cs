@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class KeyItem : Interactable
 {
-    public override string GetInteractionText()
+    public override string GetInteractionText(
+        PlayerInventory inventory)
     {
         return "[E] Pick Up Key";
     }
@@ -22,6 +23,8 @@ public class KeyItem : Interactable
 
         inventory.CollectKey();
 
-        Destroy(gameObject);
+        Destroy(
+            gameObject
+        );
     }
 }

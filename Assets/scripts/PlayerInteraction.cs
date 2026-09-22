@@ -69,7 +69,9 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         interactionText.text =
-            interactable.GetInteractionText();
+     interactable.GetInteractionText(
+         inventory
+     );
 
         if (Keyboard.current != null &&
             Keyboard.current.eKey.wasPressedThisFrame)
