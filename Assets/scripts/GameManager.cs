@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +16,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject interactionText;
 
+    [SerializeField]
+    private GameObject modeText;
+
+    [SerializeField]
+    private Button restartButton;
+
     [Header("Player")]
     [SerializeField]
     private PlayerController playerController;
@@ -24,7 +33,30 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        gameEnded = false;
+
         endPanel.SetActive(false);
+
+        crosshair.SetActive(true);
+        interactionText.SetActive(true);
+        modeText.SetActive(true);
+
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
+        Cursor.visible =
+            false;
+    }
+
+    private void Update()
+    {
+        // ตอนจบเกม กด R เพื่อ Restart ได้ทันที
+        if (gameEnded &&
+            Keyboard.current != null &&
+            Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            RestartGame();
+        }
     }
 
     public void WinGame()
@@ -36,15 +68,14 @@ public class GameManager : MonoBehaviour
 
         gameEnded = true;
 
-        endPanel.SetActive(true);
+        playerController.enabled = false;
+        playerInteraction.enabled = false;
 
         crosshair.SetActive(false);
-
         interactionText.SetActive(false);
+        modeText.SetActive(false);
 
-        playerController.enabled = false;
-
-        playerInteraction.enabled = false;
+        endPanel.SetActive(true);
 
         Cursor.lockState =
             CursorLockMode.None;

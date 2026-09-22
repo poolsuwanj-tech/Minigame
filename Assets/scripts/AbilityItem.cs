@@ -13,6 +13,10 @@ public class AbilityItem : Interactable
     [SerializeField]
     private AbilityType abilityType;
 
+    [Header("UI")]
+    [SerializeField]
+    private NotificationUI notificationUI;
+
     public override string GetInteractionText(
         PlayerInventory inventory)
     {
@@ -52,16 +56,40 @@ public class AbilityItem : Interactable
             case AbilityType.Axe:
 
                 abilities.ObtainAxe();
+
+                if (notificationUI != null)
+                {
+                    notificationUI.ShowMessage(
+                        "Obtained Axe!"
+                    );
+                }
+
                 break;
 
             case AbilityType.Lockpick:
 
                 abilities.ObtainLockpick();
+
+                if (notificationUI != null)
+                {
+                    notificationUI.ShowMessage(
+                        "Obtained Lockpick Tools!"
+                    );
+                }
+
                 break;
 
             case AbilityType.SpellBook:
 
                 abilities.LearnMagic();
+
+                if (notificationUI != null)
+                {
+                    notificationUI.ShowMessage(
+                        "Learned Dispel!"
+                    );
+                }
+
                 break;
         }
 

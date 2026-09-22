@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class KeyItem : Interactable
 {
+    [Header("UI")]
+    [SerializeField]
+    private NotificationUI notificationUI;
+
     public override string GetInteractionText(
         PlayerInventory inventory)
     {
@@ -23,8 +27,13 @@ public class KeyItem : Interactable
 
         inventory.CollectKey();
 
-        Destroy(
-            gameObject
-        );
+        if (notificationUI != null)
+        {
+            notificationUI.ShowMessage(
+                "Obtained Key!"
+            );
+        }
+
+        Destroy(gameObject);
     }
 }
