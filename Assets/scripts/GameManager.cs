@@ -92,4 +92,8 @@ public class GameManager : MonoBehaviour
             SceneManager.GetActiveScene().name
         );
     }
+    public void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
